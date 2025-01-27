@@ -1,5 +1,12 @@
 from random import random
 
+"""
+Ordena una lista utilizando el algoritmo de ordenación por mezcla (merge sort).
+Args:
+    array (list): Lista de elementos a ordenar.
+Returns:
+    list: Lista ordenada.
+"""
 def ordenar_por_mezcla(array):
     if len(array) <= 1:
         return array
@@ -10,6 +17,14 @@ def ordenar_por_mezcla(array):
     
     return mezclar(izquierda, derecha)
 
+"""
+Mezcla dos listas ordenadas en una sola lista ordenada.
+Args:
+    izquierda (list): Primera lista ordenada.
+    derecha (list): Segunda lista ordenada.
+Returns:
+    list: Lista combinada y ordenada.
+"""
 def mezclar(izquierda, derecha):
     array_ordenado = []
     i = j = 0
@@ -26,6 +41,16 @@ def mezclar(izquierda, derecha):
     array_ordenado.extend(derecha[j:])
     
     return array_ordenado
+
+"""
+Realiza una búsqueda binaria en una lista ordenada.
+Args:
+    array_entrada (list): Lista ordenada en la que se realizará la búsqueda.
+    busqueda (int): Elemento a buscar en la lista.
+Returns:
+    tuple: Una tupla que contiene el elemento encontrado y un booleano indicando si fue encontrado.
+           Si el elemento no se encuentra, retorna "No encontrado".
+"""
 
 def binary_search(array_entrada, busqueda):
     if len(array_entrada) == 0:
@@ -65,7 +90,7 @@ while True:
     
     print(f"Encontrado?: {binary_search(array_ordenado, buscar)}")  
     print("Deseas continuar? (s/n)")
-    
+
     continuar = input()
     if continuar == "n":
         break
