@@ -1,27 +1,67 @@
 ﻿/*
  
 Faltante:
-1.- Completar la forma de leer la respuesta a la pregunta inicial.
-2.- Crear una función en "GameManager" que verifique si hay alguna columna, fila o diagonal con el mismo valor para verificar si alguien ha ganado.
-3.- Declarar el Ganador en base a lo anterior, y romper el Loop.
-4.- Si hay ganador o no, ofrecer la opción de volver a intentarlo.
+1.- Dibujar el Tablero al final de la partida.
+2.- Verificar si es posible forzar un empate, si no, buscar la forma en que sean posibles.
 
 */
 
 String Choice;
-Console.WriteLine("Bienvenido al Algoritmo de las vegas con Tic-Tac-Toe\n¿Desea iniciar ahora?");
+Console.WriteLine("Bienvenido al Algoritmo de las vegas con Tic-Tac-Toe\n¿Desea iniciar ahora?\nSi/No");
 
 Choice = Console.ReadLine().ToLower();
 
 
-GameManager MiTablero = new GameManager();
-
+switch (Choice)
+{
+    case "si":
+        StartGame();
+        break;
+    case "no":
+        return;
+}
 
 while (true)
 {
-    var (Column, Row) = MiTablero.RandomMove();
-    MiTablero.BustAMove(Column, Row);
+    Console.WriteLine("Quiere volver a intentarlo?\nSi/No");
+    Choice = Console.ReadLine().ToLower();
 
+    if (Choice == "si")
+    {
+        StartGame();
+    }
+    else
+    {
+        return;
+    }
+}
+
+void StartGame() {
+    GameManager MiTablero = new GameManager();
+    int Iteraciones = 1;
+
+    while (true)
+    {
+        var (Column, Row) = MiTablero.RandomMove();
+        MiTablero.BustAMove(Column, Row);
+
+        if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CirclePlayer)
+        {
+            Console.WriteLine("Ganan las O");
+            break;
+        }
+        else if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CrossPlayer)
+        {
+            Console.WriteLine("Ganan las X");
+            break;
+        }
+
+        if (Iteraciones >= 9)
+        {
+            Console.WriteLine("No Hubo Ganador");
+            break;
+        }
+    }
 }
 
 
@@ -29,12 +69,27 @@ while (true)
 class GameManager()
 {
     public int[,] Tablero = new int [3, 3];
-    TurnPlayer CurrentPlayer = TurnPlayer.CirclePlayer;
-     enum TurnPlayer
+    public TurnPlayer CurrentPlayer = TurnPlayer.CirclePlayer;
+    public enum TurnPlayer
     {
         CirclePlayer,
         CrossPlayer
     }
+
+    //Estructura que contiene las condiciones de victoria
+
+
+    List<(int, int)[]> WinConditions = [
+    [(0, 0), (0, 1), (0, 2)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)],
+    [(0, 0), (1, 0), (2, 0)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)],
+    [(0, 0), (1, 1), (2, 2)],
+    [(0, 2), (1, 1), (2, 0)]
+    ];
+
 
     //Función que determina de forma aleatoria donde realizará su siguiente movimiento, por defecto, su argumento es siempre 3
     public (int, int) RandomMove(int Rango = 3)
@@ -80,6 +135,34 @@ class GameManager()
             Tablero[X, Y] = 2;
             CurrentPlayer = TurnPlayer.CirclePlayer;
         }
+    }
+
+    //Mira quien es el ganador de la partida
+    public bool CheckForWinner()
+    {
+        int Suma = 0;
+
+        foreach (var Caja in WinConditions){
+            foreach (var Tupla in Caja){
+                Suma += Tablero[Tupla.Item1, Tupla.Item2];
+                }
+
+            if(Suma == 3 || Suma == 6){
+                return true;
+            }
+            Suma = 0;
+        }
+        return false;
+    }
+
+    string drawEndBoard()
+    {
+        string board = "";
+
+
+
+
+        return board;
     }
 }
 
