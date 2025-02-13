@@ -1,16 +1,9 @@
-﻿/*
- 
-Faltante:
-1.- Dibujar el Tablero al final de la partida.
-2.- Verificar si es posible forzar un empate, si no, buscar la forma en que sean posibles.
-
-*/
-
-String Choice;
-Console.WriteLine("Bienvenido al Algoritmo de las vegas con Tic-Tac-Toe\n¿Desea iniciar ahora?\nSi/No");
+﻿String Choice;
+Console.WriteLine("Bienvenido al Algoritmo de las vegas con Tic-Tac-Toe\n" +
+    "¿Desea iniciar ahora?\n" +
+    "Si/No");
 
 Choice = Console.ReadLine().ToLower();
-
 
 switch (Choice)
 {
@@ -23,7 +16,8 @@ switch (Choice)
 
 while (true)
 {
-    Console.WriteLine("Quiere volver a intentarlo?\nSi/No");
+    Console.WriteLine("Quiere volver a intentarlo?\n" +
+        "Si/No");
     Choice = Console.ReadLine().ToLower();
 
     if (Choice == "si")
@@ -42,33 +36,46 @@ void StartGame() {
 
     while (true)
     {
+        //Obtiene 2 valores de la función de Movimiento Aleatorio
         var (Column, Row) = MiTablero.RandomMove();
+        //Los usa para hacer un Movimiento en el tablero
         MiTablero.BustAMove(Column, Row);
-
-        if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CirclePlayer)
+        
+        //Si ya se ha repetido el proceso 5 veces, empieza a verificar las condiciones de victoria
+        if (Iteraciones >= 5)
         {
-            Console.WriteLine("Ganan las O");
-            break;
+            if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CirclePlayer)
+            {
+                Console.WriteLine(MiTablero.drawEndBoard());
+                Console.WriteLine("Ganan las O");
+                break;
+            }
+            else if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CrossPlayer)
+            {
+                Console.WriteLine(MiTablero.drawEndBoard());
+                Console.WriteLine("Ganan las X");
+                break;
+            }
+            //Si ya han pasado 9 turnos y nadie ha ganado, se declara empate
+            else if (Iteraciones >= 9)
+            {
+                Console.WriteLine(MiTablero.drawEndBoard());
+                Console.WriteLine("No Hubo Ganador");
+                break;
+            }
         }
-        else if (MiTablero.CheckForWinner() && MiTablero.CurrentPlayer == GameManager.TurnPlayer.CrossPlayer)
-        {
-            Console.WriteLine("Ganan las X");
-            break;
-        }
-
-        if (Iteraciones >= 9)
-        {
-            Console.WriteLine("No Hubo Ganador");
-            break;
-        }
+        MiTablero.changeTurn();
+        
+        Iteraciones++;
     }
 }
 
 
-
 class GameManager()
 {
-    public int[,] Tablero = new int [3, 3];
+    //Tablero
+    public string[,] Tablero = { { "-", "-", "-" }, { "-", "-", "-" }, { "-", "-", "-" } };
+    //Pequeña Maquina de estado
     public TurnPlayer CurrentPlayer = TurnPlayer.CirclePlayer;
     public enum TurnPlayer
     {
@@ -76,20 +83,18 @@ class GameManager()
         CrossPlayer
     }
 
-    //Estructura que contiene las condiciones de victoria
-
-
+    //Lista que contiene las condiciones de victoria
+    //3 filas, 3 columnas, 2 diagonales, en ese orden
     List<(int, int)[]> WinConditions = [
-    [(0, 0), (0, 1), (0, 2)],
+    [(0, 0), (0, 1), (0, 2)], 
     [(1, 0), (1, 1), (1, 2)],
     [(2, 0), (2, 1), (2, 2)],
     [(0, 0), (1, 0), (2, 0)],
-    [(1, 0), (1, 1), (1, 2)],
-    [(2, 0), (2, 1), (2, 2)],
+    [(0, 1), (1, 1), (2, 1)],
+    [(0, 2), (1, 2), (2, 2)],
     [(0, 0), (1, 1), (2, 2)],
     [(0, 2), (1, 1), (2, 0)]
     ];
-
 
     //Función que determina de forma aleatoria donde realizará su siguiente movimiento, por defecto, su argumento es siempre 3
     public (int, int) RandomMove(int Rango = 3)
@@ -103,6 +108,12 @@ class GameManager()
         movX = randomizer.Next(0, Rango);
         movY = randomizer.Next(0, Rango);
 
+        while (!canMakeAMove(movX, movY))
+        {
+            movX = randomizer.Next(0, Rango);
+            movY = randomizer.Next(0, Rango);;
+        }
+
         //Regresa una tupla de valores con los valores aleatorios
         return (movX, movY);
 
@@ -111,7 +122,7 @@ class GameManager()
     //Función que revisa si es posible hacer un movimiento en una posición del tablero
     private bool canMakeAMove(int X, int Y)
     {
-        if (Tablero[X, Y] == 0) //en caso de que la posición del tablero sea 0, significa que está libre, y es posible mover
+        if (Tablero[X, Y] == "-") //en caso de que la posición del tablero sea -, significa que está libre, y es posible mover
         {
             return true;
         }
@@ -119,51 +130,69 @@ class GameManager()
     }
 
     //Función que permite realizar un movimiento en el tablero
-    public void BustAMove(int X, int Y) 
+    public void BustAMove(int X, int Y)
     {
         if (canMakeAMove(X, Y) && CurrentPlayer == TurnPlayer.CirclePlayer) //Si es posible hacer un movimiento en un lugar del tablero, y es turno de los circulos
         {
-            //Escribe 1 y pasa el turno al jugador de las cruces
-            Tablero[X, Y] = 1; 
-            CurrentPlayer = TurnPlayer.CrossPlayer;
+            //Escribe O
+            Tablero[X, Y] = "O";
 
         }
         //Lo mismo pero para el jugador de las cruces
         else if (canMakeAMove(X, Y) && CurrentPlayer == TurnPlayer.CrossPlayer)
         {
-
-            Tablero[X, Y] = 2;
-            CurrentPlayer = TurnPlayer.CirclePlayer;
+            //Escribe X
+            Tablero[X, Y] = "X";
         }
     }
 
     //Mira quien es el ganador de la partida
     public bool CheckForWinner()
     {
-        int Suma = 0;
+        //Itera a través de cada Array de la Lista
+        foreach (var Caja in WinConditions) {
 
-        foreach (var Caja in WinConditions){
-            foreach (var Tupla in Caja){
-                Suma += Tablero[Tupla.Item1, Tupla.Item2];
+            int cantidadO = 0;
+            int cantidadX = 0;
+
+            //Itera a través de cada tupla del Array
+            foreach (var Tupla in Caja) {
+
+                //Asigna los valores de la tupla cómo Indices del tablero y revisa si son X u O
+                if (Tablero[Tupla.Item1, Tupla.Item2] == "O")
+                {
+                    cantidadO++;
                 }
-
-            if(Suma == 3 || Suma == 6){
+                else if (Tablero[Tupla.Item1, Tupla.Item2] == "X") {
+                    cantidadX++;
+                }
+            }
+            //Si cualquiera de los 2 llega a 3, regresa Cierto
+            if (cantidadO == 3 || cantidadX == 3) {
                 return true;
             }
-            Suma = 0;
         }
         return false;
     }
 
-    string drawEndBoard()
+    //Dibuja el Tablero de juego
+    public string drawEndBoard()
     {
-        string board = "";
-
-
-
-
+        string board = $"{Tablero[0, 0]}|{Tablero[0, 1]}|{Tablero[0, 2]}\n" +
+            $"{Tablero[1, 0]}|{Tablero[1, 1]}|{Tablero[1, 2]}\n" +
+            $"{Tablero[2, 0]}|{Tablero[2, 1]}|{Tablero[2, 2]}";
         return board;
     }
-}
 
+    //Se asegura de cambiar el jugador en turno al ser llamado
+    public void changeTurn()
+    {
+        if (CurrentPlayer == TurnPlayer.CrossPlayer) {
+            CurrentPlayer = TurnPlayer.CirclePlayer;
+        }
+        else if (CurrentPlayer == TurnPlayer.CirclePlayer) {
+            CurrentPlayer = TurnPlayer.CrossPlayer;
+        }
+    }
+}
    
