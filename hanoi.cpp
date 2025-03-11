@@ -4,6 +4,7 @@
 #include <vector>
 #include <locale.h>
 #include "colores.cpp"
+
 using namespace std;
 /*
     ANGEL EDUARDO MUÑOZ PEREZ - LUIS JAVIER GARNICA ESCAMILLA - FABIAN CANDIA VILLA
