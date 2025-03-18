@@ -8,7 +8,7 @@ ANALISIS DE ALGORTIMOS Prof. Hector Gonzales
 #include <cstdlib> // Para rand() y srand()
 #include <ctime>   // Para time()
 #include <limits>  // Para limpiar el buffer de entrada
-
+#include "colores.cpp"//para hacer las cosas coloridas en consola
 using namespace std;
 
 // Función para generar un número aleatorio entre 1 y 10
@@ -21,7 +21,8 @@ int generarPesoAleatorio(bool permitirVacios) {
 
 // Función para imprimir la matriz de adyacencia
 void imprimirMatriz(int** matriz, int n) {
-    cout <<endl<< "Matriz de Adyacencia:"<<endl;
+	color(2);
+    cout <<endl<< "Matriz de Adyacencia:"<<endl;color(15);
     cout << setw(5) << " ";
     for (int i = 0; i < n; ++i) {
         cout << setw(5) << i;
@@ -42,8 +43,9 @@ void imprimirMatriz(int** matriz, int n) {
 
 int main() {
     int n;
-    cout << "Ingrese la cantidad de nodos: ";
-    cin >> n;
+    color(10);cout<<"  BIENVENIDO A MI PROGRAMA ESTIMADO :)\n         creacion de grafos "  <<endl;cout<<"========================================="<<endl;
+    color(11);cout << "Ingrese la cantidad de nodos: ";color(8);
+    cin >> n;color(15);
 
     // Crear la matriz de adyacencia
     int** matriz = new int*[n];//doble puntero para apuntar tanto a los espacios de la fila de la matriz, como a las columnas que corresponden
@@ -55,12 +57,12 @@ int main() {
     }
 
     char opcion;
-    cout << "¿Desea generar los pesos de forma aleatoria? (s/n): ";
+    color(11);cout << "¿Desea generar los pesos de forma aleatoria? [";color(2); cout<<"S ";color(11);cout<<"/ ";color(12);cout<<"N";color(11);cout<<"]";color(15);
     cin >> opcion;
 
     if (opcion == 's' || opcion == 'S') {
         char vaciosOpcion;
-        cout << "¿Desea permitir espacios vacios en la matriz? (s/n): ";
+        color(11);cout << "¿Desea permitir espacios vacios en la matriz? [";color(2); cout<<"S ";color(11);cout<<"/ ";color(12);cout<<"N";color(11);cout<<"]";color(15);
         cin >> vaciosOpcion;
         bool permitirVacios = (vaciosOpcion == 's' || vaciosOpcion == 'S');
 
@@ -87,15 +89,15 @@ int main() {
         	primero chehcamos si pone "x" que en este caso es para indicar que no hay arista de ese nodo a nodo,
         	luego pasamos y vemos si es un numero con isdigit checando todo el string, para pasarlo depsues a entero con stoi
         */
-        cout << "Ingrese los pesos de la matriz de adyacencia (use 'X' para omitir una arista):\n";
+        color(3);cout << "Ingrese los pesos de la matriz de adyacencia ";color(1);cout<<"(use 'X' para omitir una arista):\n";
         for (int i = 0; i < n; ++i) { //el doble bucle
             for (int j = 0; j < n; ++j) {
                 if (i == j) {
                     matriz[i][j] = 0; // No hay lazos en un grafo simple
                 } else {
                     string input;
-                    cout << "Peso del nodo " << i << " al nodo " << j << " (o 'X' para omitir): ";
-                    cin >> input;
+                    color(7);cout << "Peso del nodo " << i << " al nodo " << j << " (o 'X' para omitir): ";
+                    color(8);cin >> input;color(15);
 
                     // Verificar si la entrada es 'X' o 'x'
                     if (input == "X" || input == "x") { // Representa un espacio vacío si detecta que el usuario metio x
@@ -112,7 +114,7 @@ int main() {
                         if (esNumero) {
                             matriz[i][j] = stoi(input); // Convertir a entero
                         } else {
-                            cout << "Entrada no válida. Se usará 0 como valor predeterminado.\n";
+                            color(12);cout << "Entrada no válida. Se usará 0 como valor predeterminado.\n";color(15);
                             matriz[i][j] = 0;
                         }//FIN DEL IF VALIDAR NUMERO
                     }//fin del if para leer pesos de nodos
