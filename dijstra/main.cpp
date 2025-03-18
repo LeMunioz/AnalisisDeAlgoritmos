@@ -1,35 +1,21 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <utility>
 #include <SFML/Graphics.hpp>
-#include <random>
 
-using namespace std;
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+        }
 
-struct Edge {
-    int target;
-    float weight;
-};
-
-using Graph = vector<vector<Edge>>;
-
-Graph generateRandomGraph(int numNodes, int numEdges) {
-    Graph graph(numNodes);
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dis(0, numNodes - 1);
-    uniform_real_distribution<> weightDis(1.0, 10.0);
-
-    for (int i = 0; i < numEdges; ++i) {
-        int from = dis(gen);
-        int to = dis(gen);
-        float weight = weightDis(gen);
-        graph[from].push_back({to, weight});
+        window.clear();
+        window.draw(shape);
+        window.display();
     }
-
-    return graph;
 }
