@@ -46,33 +46,36 @@ void imprimirMatriz(int** matriz, int n) {
 /* ALGORIMTO DE FLOYD-WARSHALL
 	Copea la matriz que ya hicimos en el programa
 	para hacer las sumas correspondientes y comparacion del algoritmo
-		bucle for(k) sirve para hacer iteracion sobre todos los nodos
-		bucle for(i) para moverse sobre los nodos origen
-		bucle for(j) para moverse sobre los nodos destino
-		para cada combinación de nodos (i, j), el algoritmo verifica si pasar por el nodo k como intermediario resulta en un camino más corto.
-*/
+		bucle for(i) sirve identificar el intermediarias (es el de la interseccion)
+		bucle for(f) para recorrer las filas
+		bucle for(c) para recorres las columnas
+		 para un punto en la matriz [2,2] sabemos que se llega de la interseccion de [1,2]x[2,1]
+		 entonces utilizamos k como punto de matriz y "f" & "c" para las filas y coumnas de la interseccion
+		 valor[i,i] = interseccion([f,i][i,c])
+		 a partir de ahi hacemos la suma para hacer la comparacion del algoritmo de FLOYD
+*/		
 void floydWarshall(int** matriz, int n) {
     // Crear una copia de la matriz de adyacencia para trabajar con ella
     int** distancias = new int*[n];
-    for (int i = 0; i < n; ++i) {
-        distancias[i] = new int[n];
-        for (int j = 0; j < n; ++j) {
-            if (i == j) {
-                distancias[i][j] = 0; // La distancia de un nodo a sí mismo es 0
-            } else if (matriz[i][j] != -1) {
-                distancias[i][j] = matriz[i][j]; // Usar el peso de la arista si existe
+    for (int f = 0; f < n; ++f) {
+        distancias[f] = new int[n];
+        for (int c = 0; c < n; ++c) {
+            if (f == c) {
+                distancias[f][c] = 0; // La distancia de un nodo a sí mismo es 0
+            } else if (matriz[f][c] != -1) {
+                distancias[f][c] = matriz[f][c]; // Usar el peso de la arista si existe
             } else {
-                distancias[i][j] = 9999; // Infinito (representado por un número grande)
+                distancias[f][c] = 9999; // Infinito (representado por un número grande)
             }
         }
     }
 
     // Aplicar el algoritmo de Floyd-Warshall
-    for (int k = 0; k < n; ++k) {
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (distancias[i][k] + distancias[k][j] < distancias[i][j]) {
-                    distancias[i][j] = distancias[i][k] + distancias[k][j];
+    for (int i = 0; i < n; ++i) {
+        for (int f = 0; f < n; ++f) {
+            for (int c = 0; c < n; ++c) {
+                if (distancias[f][i] + distancias[i][c] < distancias[f][c]) { //comparamos las cruces con la interseccion
+                    distancias[f][c] = distancias[f][i] + distancias[i][c];   //asignameos si es menor
                 }
             }
         }
@@ -83,25 +86,25 @@ void floydWarshall(int** matriz, int n) {
     cout << endl << "Matriz de Floyd-Warshall (Distancias más cortas):" << endl;
     color(15);
     cout << setw(5) << " ";
-    for (int i = 0; i < n; ++i) {
-        cout << setw(5) << i;
+    for (int f = 0; f < n; ++f) {
+        cout << setw(5) << f;
     }
     cout << endl;
-    for (int i = 0; i < n; ++i) {
-        cout << setw(5) << i;
-        for (int j = 0; j < n; ++j) {
-            if (distancias[i][j] == 9999) {
+    for (int f = 0; f < n; ++f) {
+        cout << setw(5) << f;
+        for (int c = 0; c < n; ++c) {
+            if (distancias[f][c] == 9999) {
                 cout << setw(5) << "INF"; // Mostrar "INF" para distancias infinitas
             } else {
-                cout << setw(5) << distancias[i][j];
+                cout << setw(5) << distancias[f][c];
             }
         }
         cout << endl;
     }
 
     // Liberar memoria
-    for (int i = 0; i < n; ++i) {
-        delete[] distancias[i];
+    for (int f = 0; f < n; ++f) {
+        delete[] distancias[f];
     }
     delete[] distancias;
 }//FIN DE LA FUNCIÓN FLOYD-WARSHALL////////////////////////////////////////////////////////
