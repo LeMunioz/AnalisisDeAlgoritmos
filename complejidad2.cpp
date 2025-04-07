@@ -1,8 +1,8 @@
 #include <iostream>
-#include <chrono>  //para medir el tiempo que le cuesta realizar acciones
+#include <chrono> //para medir el tiempo que le toma hacer instrucciones
 #include <iomanip>
 #include <vector>
-#include <cstdlib>  // Para rand()
+#include <cstdlib> //para el numero random
 
 /*
 ANGEL EDUARDO MUÑOZ PEREZ
@@ -14,12 +14,22 @@ Introducción a la complejidad de algoritmos
 using namespace std;
 using namespace std::chrono;
 
+// Función para imprimir un arreglo
+void imprimirArreglo(int arr[], int n) {
+    cout << "[ ";
+    for (int i = 0; i < n; ++i) {
+        cout << arr[i];
+        if (i < n - 1) cout << ", ";
+    }
+    cout << " ]" << endl;
+}
+
 // Función para ordenar un arreglo con Bubble Sort
 void bubbleSort(int arr[], int n) {
     for (int i = 0; i < n - 1; ++i) {
         for (int j = 0; j < n - i - 1; ++j) {
             if (arr[j] > arr[j + 1]) {
-                swap(arr[j], arr[j + 1]);  // Intercambia si están en desorden
+                swap(arr[j], arr[j + 1]); //intercambiar valor si ve que el siguiente es menor
             }
         }
     }
@@ -28,50 +38,56 @@ void bubbleSort(int arr[], int n) {
 // Genera un arreglo aleatorio de tamaño n
 void generarArregloAleatorio(int arr[], int n) {
     for (int i = 0; i < n; ++i) {
-        arr[i] = rand() % 10000;  // Números aleatorios entre 0 y 9999
+        arr[i] = rand() % 10000;  // Números entre 0 y 9999
     }
 }
 
-// Mide el tiempo de ejecución de Bubble Sort
-//  Cada repetición genera un nuevo arreglo aleatorio y mide el tiempo de ordenamiento.
-//  Por defecto, se hacen 2 repeticiones (para cada n).
+// Mide el tiempo de Bubble Sort y muestra arreglos
 vector<double> medirTiempoBubbleSort(int n, int repeticiones = 2) {
     vector<double> tiempos;
-    int* arr = new int[n];  // Arreglo dinámico
+    int* arr = new int[n]; //puntero para hacer un arreglo de tamaño dinamico
 
     for (int r = 0; r < repeticiones; ++r) {
-        generarArregloAleatorio(arr, n);  // Llena el arreglo con valores aleatorios
+        generarArregloAleatorio(arr, n);
 
-        auto inicio = high_resolution_clock::now(); //para iniciar el cronometro
-        bubbleSort(arr, n);  // Ordena el arreglo
-        auto fin = high_resolution_clock::now();   //para finalizar el cronometro
+        cout << "\n--- Repetición " << r + 1 << " ---" << endl;
+        cout << "Arreglo desordenado (" << n << " elementos):" << endl;
+        imprimirArreglo(arr, n);
 
-        duration<double> duracion = fin - inicio;
-        tiempos.push_back(duracion.count());
+        auto inicio = high_resolution_clock::now(); //iniciar el cronometro (guardamos el momento en el que se capturo)
+        bubbleSort(arr, n);
+        auto fin = high_resolution_clock::now();   //finalizar el cronometro (guardamos el momento en el que se capturo)
+
+        cout << "Arreglo ordenado:" << endl;
+        imprimirArreglo(arr, n);
+
+        duration<double> duracion = fin - inicio; //hacemos resta de los momentos caputrados para ver cuanto tomo entre iniciar el cronometro y finalizar el cronometro
+        tiempos.push_back(duracion.count()); //metemos los valores de tiempos a una lista
+        cout << "Tiempo de ordenamiento: " << fixed << setprecision(6) << duracion.count() << " s" << endl;
     }
 
-    delete[] arr;  // Libera la memoria
+    delete[] arr;
     return tiempos;
 }
 
 int main() {
-    // Valores de n (tamaños del arreglo)
-    vector<int> lista_n = {100, 500, 1000, 2000, 3000, 4000, 5000};
+    srand(time(0));  // Semilla para rand()
 
-    // Cabecera de la tabla
-    cout << "+-------------------+---------------+------------------+" << endl;
-    cout << "| n (Tamaño Arreglo)| Repetición    | Tiempo (s)       |" << endl;
-    cout << "+-------------------+---------------+------------------+" << endl;
+    vector<int> lista_n = {10, 20, 50, 100, 200, 1000, 5000};
 
-    // Medición y visualización
+    cout << "+-------------------+------------------+" << endl;
+    cout << "| n (Tamaño Arreglo)| Tiempo Promedio (s) |" << endl;
+    cout << "+-------------------+------------------+" << endl;
+
     for (int n : lista_n) {
         vector<double> tiempos = medirTiempoBubbleSort(n);
-        for (size_t r = 0; r < tiempos.size(); ++r) {
-            cout << "| " << setw(17) << n << " | " << setw(13) << r + 1 << " | " 
-                 << setw(16) << fixed << setprecision(6) << tiempos[r] << " |" << endl;
-        }
+        double promedio = 0;
+        for (double t : tiempos) promedio += t;
+        promedio /= tiempos.size();
+
+        cout << "| " << setw(17) << n << " | " << setw(16) << fixed << setprecision(6) << promedio << " |" << endl;
     }
-    cout << "+-------------------+---------------+------------------+" << endl;
+    cout << "+-------------------+------------------+" << endl;
 
     return 0;
 }
