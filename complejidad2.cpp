@@ -92,35 +92,41 @@ vector<double> medirTiempoBubbleSort(int n, bool mostrarArreglos, int repeticion
 }//fin de la funcion MedirTiempoBurbuja//////////////////////////
 
 int main() {
-    char opcion;// variable para escoger si se escribirá los arreglos
+    char opcion; // variable para escoger si se escribirá los arreglos
+    char repetir; // variable para determinar si se repite el programa
     
-    color(3); cout << "      ANGEL EDUARDO MUÑOZ PEREZ" << endl;
-    cout << "      Complejidad de Algoritmos" << endl;
-    color(1); cout << "=======================================" << endl;
-    color(3); cout << "Algoritmo burbuja con vectores de 10, 20, 50, 100, 200, 1000, 5000" << endl;
-    color(1); cout << "=======================================" << endl;
-    color(15); cout << "¿Deseas ver los vectores antes y después de realizar el algoritmo?" << endl;
-    color(2); cout << " [S] "; color(12); cout << "[N] " << endl; color(15);
-    cin >> opcion;
-    
-    srand(time(0));  // Semilla para rand()
+    do {
+        color(3); cout << "      ANGEL EDUARDO MUÑOZ PEREZ" << endl;
+        cout << "      Complejidad de Algoritmos" << endl;
+        color(1); cout << "=======================================" << endl;
+        color(3); cout << "Algoritmo burbuja con vectores de 10, 20, 50, 100, 200, 1000, 5000" << endl;
+        color(1); cout << "=======================================" << endl;
+        color(15); cout << "¿Deseas ver los vectores antes y después de realizar el algoritmo?" << endl;
+        color(2); cout << " [S] "; color(12); cout << "[N] " << endl; color(15);
+        cin >> opcion;
+        
+        srand(time(0));  // Semilla para rand()
 
-    vector<int> lista_n = {10, 20, 50, 100, 200, 1000, 5000};
-    bool mostrarArreglos = (opcion == 's' || opcion == 'S'); // Solo mostrar arreglos si se elige 's' o 'S'
+        vector<int> lista_n = {10, 20, 50, 100, 200, 1000, 5000};
+        bool mostrarArreglos = (opcion == 's' || opcion == 'S'); // Solo mostrar arreglos si se elige 's' o 'S'
 
-    cout << "+-------------------+------------------+" << endl;
-    cout << "| n (Tamaño Arreglo)| Tiempo Promedio (s) |" << endl;
-    cout << "+-------------------+------------------+" << endl;
+        cout << "+-------------------+------------------+" << endl;
+        cout << "| n (Tamaño Arreglo)| Tiempo Promedio (s) |" << endl;
+        cout << "+-------------------+------------------+" << endl;
 
-    for (int n : lista_n) {
-        vector<double> tiempos = medirTiempoBubbleSort(n, mostrarArreglos);
-        double promedio = 0;
-        for (double t : tiempos) promedio += t;
-        promedio /= tiempos.size();
+        for (int n : lista_n) {
+            vector<double> tiempos = medirTiempoBubbleSort(n, mostrarArreglos);
+            double promedio = 0;
+            for (double t : tiempos) promedio += t;
+            promedio /= tiempos.size();
 
-        cout << "| " << setw(17) << n << " | " << setw(16) << fixed << setprecision(6) << promedio << " |" << endl;
-    }
-    cout << "+-------------------+------------------+" << endl;
+            cout << "| " << setw(17) << n << " | " << setw(16) << fixed << setprecision(6) << promedio << " |" << endl;
+        }
+        cout << "+-------------------+------------------+" << endl;
+
+        color(15); cout << "¿Deseas realizar otra prueba? (S/N): ";
+        cin >> repetir;
+    } while (repetir == 'S' || repetir == 's');
 
     return 0;
 }
