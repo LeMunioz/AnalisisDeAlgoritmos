@@ -6,21 +6,22 @@
 using namespace std;
 using namespace std::chrono;
 
-// Función con operaciones
+// Funciï¿½n con operaciones
 void ejecutarInstrucciones(int n) {
     double resultado = 0.0;
     for (int i = 0; i < n; ++i) {
-        resultado += sin(i) * cos(i); // Operación matemática 
+        resultado += sin(i) * cos(i); // Operaciï¿½n matemï¿½tica 
     }
-    // Evita que el compilador optimice eliminando el cálculo
+    // Evita que el compilador optimice eliminando el cï¿½lculo
     volatile double evitarOptimizacion = resultado; 
 }
-
+//cosorro
 int main() {
+    int uno =1;
     vector<int> valores_n = {10, 20, 50, 100, 200, 1000, 2000};
     int repeticiones = 2;
 
-    cout << "n\t| Tiempo Ejecución (1)\t| Tiempo Ejecución (2)" << endl;
+    cout << "n\t| Tiempo Ejecuciï¿½n (1)\t| Tiempo Ejecuciï¿½n (2)" << endl;
     cout << "-----------------------------------------------------" << endl;
 
     for (int n : valores_n) {
